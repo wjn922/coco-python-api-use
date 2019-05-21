@@ -3,6 +3,157 @@ import cv2
 import os
 import matplotlib.pyplot as plt
 
+colorname = [
+'aliceblue',
+'antiquewhite',
+'aqua',
+'aquamarine',
+'azure',
+'beige',
+'bisque',
+'black',
+'blanchedalmond',
+'blue',
+'blueviolet',
+'brown',
+'burlywood',
+'cadetblue',
+'chartreuse',
+'chocolate',
+'coral',
+'cornflowerblue',
+'cornsilk',
+'crimson',
+'cyan',
+'darkblue',
+'darkcyan',
+'darkgoldenrod',
+'darkgray',
+'darkgreen',
+'darkkhaki',
+'darkmagenta',
+'darkolivegreen',
+'darkorange',
+'darkorchid',
+'darkred',
+'darksalmon',
+'darkseagreen',
+'darkslateblue',
+'darkslategray',
+'darkturquoise',
+'darkviolet',
+'deeppink',
+'deepskyblue',
+'dimgray',
+'dodgerblue',
+'firebrick',
+'floralwhite',
+'forestgreen',
+'fuchsia',
+'gainsboro',
+'ghostwhite',
+'gold',
+'goldenrod',
+'gray',
+'green',
+'greenyellow',
+'honeydew',
+'hotpink',
+'indianred',
+'indigo',
+'ivory',
+'khaki',
+'lavender',
+'lavenderblush',
+'lawngreen',
+'lemonchiffon',
+'lightblue',
+'lightcoral',
+'lightcyan',
+'lightgoldenrodyellow',
+'lightgreen',
+'lightgray',
+'lightpink',
+'lightsalmon',
+'lightseagreen',
+'lightskyblue',
+'lightslategray',
+'lightsteelblue',
+'lightyellow',
+'lime',
+'limegreen',
+'linen',
+'magenta',
+'maroon',
+'mediumaquamarine',
+'mediumblue',
+'mediumorchid',
+'mediumpurple',
+'mediumseagreen',
+'mediumslateblue',
+'mediumspringgreen',
+'mediumturquoise',
+'mediumvioletred',
+'midnightblue',
+'mintcream',
+'mistyrose',
+'moccasin',
+'navajowhite',
+'navy',
+'oldlace',
+'olive',
+'olivedrab',
+'orange',
+'orangered',
+'orchid',
+'palegoldenrod',
+'palegreen',
+'paleturquoise',
+'palevioletred',
+'papayawhip',
+'peachpuff',
+'peru',
+'pink',
+'plum',
+'powderblue',
+'purple',
+'red',
+'rosybrown',
+'royalblue',
+'saddlebrown',
+'salmon',
+'sandybrown',
+'seagreen',
+'seashell',
+'sienna',
+'silver',
+'skyblue',
+'slateblue',
+'slategray',
+'snow',
+'springgreen',
+'steelblue',
+'tan',
+'teal',
+'thistle',
+'tomato',
+'turquoise',
+'violet',
+'wheat',
+'white',
+'whitesmoke',
+'yellow',
+'yellowgreen']
+
+
+def draw_box(anns):
+	for i in range(len(anns)):
+		x, y, w, h = anns[i]['bbox']
+		x, y, w, h = int(x), int(y), int(w), int(h)
+		plt.gca().add_patch(plt.Rectangle(xy=(x,y), width=w, height=h, \
+			color=colorname[(3*i)%140], fill=False, linewidth=2))
+
+
 # 1.加载
 dataDir = '.'
 dataType = 'val2017'
@@ -23,16 +174,17 @@ imgIds = coco.getImgIds(catIds=catIds)
 img = coco.loadImgs(imgIds[:])[0] # 第一张图
 
 img_path = os.path.join("./val2017/",img['file_name'])
-img_show = cv2.imread(img_path)
+#img_show = cv2.imread(img_path)
 
 
 #4 将标注信息显示在图上
 annIds = coco.getAnnIds(imgIds=img['id'], catIds=catIds, iscrowd=None)
 anns = coco.loadAnns(annIds)  # 一张图可能对应多个ann
 
+
 I = plt.imread(img_path)
 plt.imshow(I)
+draw_box(anns)
 plt.axis('off')
 coco.showAnns(anns)
 plt.show()
-
