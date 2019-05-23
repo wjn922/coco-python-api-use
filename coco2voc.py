@@ -15,6 +15,8 @@ if not os.path.exists(label_dir):
 
 time_open = time.time()
 coco = COCO(ann_path)
+
+################### Create label folder ###############
 # 获取所有的图片 字典信息
 img_dict = coco.loadImgs(coco.getImgIds()) 
 #print(img_dict[0:5])
@@ -49,6 +51,28 @@ for i in range(img_num):
 			line.append(str(w)+'\t')
 			line.append(str(h)+'\n')
 			f.writelines(line)
+
+
+
+################### Create train and test names files #############
+with open('train.txt','w') as f:
+	for i in range(img_num):
+		img = img_df.iloc[i]
+		img_name = img['file_name']
+		line = img_dir + img_name + '\n'
+		f.writelines(line)
+
+
+################ Create names(classes) file ####################
+# Get the names of all classes
+cats = coco.loadCats(coco.getCatIds())
+nms = [cat['name'] for cat in cats]
+with open('coco.names','w') as f:
+	for i in range(len(nms)):
+		line = nms[i] + '\n'
+		f.writelines(line)
+
+
 
 time_end = time.time()-time_open
 print("Finished in %fs" %time_end)
