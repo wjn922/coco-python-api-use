@@ -149,7 +149,8 @@ colorname = [
 def draw_box(anns):
 	for i in range(len(anns)):
 		x, y, w, h = anns[i]['bbox']
-		x, y, w, h = int(x), int(y), int(w), int(h)
+		x, y, w, h = float(x), float(y), float(w), float(h)
+		#print(x,y,w,h,'\t')
 		plt.gca().add_patch(plt.Rectangle(xy=(x,y), width=w, height=h, \
 			color=colorname[(3*i)%140], fill=False, linewidth=2))
 
@@ -163,7 +164,10 @@ coco = COCO(annFile)
 # 2.显示类和超类名
 cats = coco.loadCats(coco.getCatIds())
 nms = [cat['name'] for cat in cats]
-print("\ncoco categories: \n {} \n".format(' '.join(nms)))
+ids = [cat['id'] for cat in cats]
+dic_cats = [str(cat['id'])+"_"+cat['name'] for cat in cats]
+print("\ncoco categories: \n {} \n".format(' '.join(dic_cats)))
+#print("\ncoco categories: \n {} \n".format(' '.join(nms)))
 
 nms = set([cat['supercategory'] for cat in cats])
 print("coco supercategories: \n {} \n".format(' '.join(nms)))
@@ -171,20 +175,22 @@ print("coco supercategories: \n {} \n".format(' '.join(nms)))
 # 3.加载并显示指定id的图片
 catIds = coco.getCatIds(catNms=['person','truck','dog'])
 imgIds = coco.getImgIds(catIds=catIds)
-img = coco.loadImgs(imgIds[:])[0] # 第一张图
+img = coco.loadImgs(imgIds[:])[0] # 第一张图，返回的该图的字典信息
 
 img_path = os.path.join("./val2017/",img['file_name'])
 #img_show = cv2.imread(img_path)
 
 
 #4 将标注信息显示在图上
-annIds = coco.getAnnIds(imgIds=img['id'], catIds=catIds, iscrowd=None)
+annIds = coco.getAnnIds(imgIds=img['id'], catIds=catIds, iscrowd=None) #这里只找所需类的annotation					
 anns = coco.loadAnns(annIds)  # 一张图可能对应多个ann
+print(anns)
 
-
+# fig = plt.figure()
 I = plt.imread(img_path)
 plt.imshow(I)
 draw_box(anns)
 plt.axis('off')
 coco.showAnns(anns)
+plt.savefig("test.jpg")
 plt.show()
