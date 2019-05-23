@@ -18,8 +18,13 @@ pip install pycocotools
 ```
 
 ### 3. How to use
-Display the image with mask.
+a. Display the image with mask and bbox. 
 ```
 python3 coco.py
 ```
-
+b. convert coco format to voc format.    
+*coco format: all label stored in .json*    
+*voc format: one image corresponds to one .txt*    
+```
+python3 coco2voc.py
+```
