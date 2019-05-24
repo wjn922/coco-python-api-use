@@ -37,7 +37,7 @@ for i in range(img_num):
 	annIds = coco.getAnnIds(imgIds=img['id'])
 	anns = coco.loadAnns(annIds)  # 一张图可能对应多个ann
 
-	with open(os.path.join(label_dir, img['file_name'].split('.')[0]+'txt'), 'w') as f:
+	with open(os.path.join(label_dir, img['file_name'].split('.')[0]+'.txt'), 'w') as f:
 		for i in range(len(anns)):
 			line = []
 			line.append(str(anns[i]['category_id'])+'\t')
